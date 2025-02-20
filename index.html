@@ -17,6 +17,7 @@
             background: linear-gradient(120deg, #121212, #1e1e1e);
             color: #fff;
             text-align: center;
+            font-size: 16px;
         }
 
         /* Menu */
@@ -29,7 +30,7 @@
             position: fixed;
             width: 100%;
             top: 0;
-            z-index: 1000;
+            z-index: 1001;
         }
 
         .logo {
@@ -58,73 +59,45 @@
             text-shadow: 0 0 10px #b300ff;
         }
 
-        /* Planos */
-        .planos {
-            margin-top: 100px;
-            padding: 50px;
-        }
-
-        .plano {
-            display: inline-block;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            margin: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #b300ff;
-            transition: transform 0.3s;
-        }
-
-        .plano:hover {
-            transform: scale(1.05);
-        }
-
-        .plano h3 {
-            margin-bottom: 10px;
-            color: #b300ff;
-        }
-
-        .plano p {
-            margin-bottom: 15px;
-        }
-
-        .plano button {
-            background: #b300ff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-        }
-
-        .plano button:hover {
-            background: #9000cc;
-        }
-
-        /* Rodapé */
-        footer {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px;
-            margin-top: 20px;
-        }
-
         /* Mensagem de boas-vindas */
         .boas-vindas {
-            margin-top: 50px;
-            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #b300ff;
+            color: #fff;
             text-align: center;
+            z-index: 9999;
+            border-bottom: 3px solid #b300ff;
         }
 
         .boas-vindas h2 {
             color: #b300ff;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .boas-vindas p {
-            color: #fff;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .boas-vindas .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .boas-vindas .close-btn:hover {
+            background: #cc0000;
         }
 
         .boas-vindas button {
@@ -139,6 +112,72 @@
 
         .boas-vindas button:hover {
             background: #9000cc;
+        }
+
+        .cronometro {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #ff0000;
+        }
+
+        /* Planos */
+        .planos {
+            margin-top: 150px;
+            padding: 50px;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .plano {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #b300ff;
+            min-width: 280px;
+            transition: transform 0.3s;
+            text-align: left;
+            flex: 1 1 25%;
+            margin: 10px;
+        }
+
+        .plano:hover {
+            transform: scale(1.05);
+        }
+
+        .plano h3 {
+            margin-bottom: 10px;
+            color: #b300ff;
+        }
+
+        .plano p {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .plano button {
+            background: #b300ff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            width: 100%;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .plano button:hover {
+            background: #9000cc;
+        }
+
+        /* Rodapé */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            margin-top: 30px;
+            color: #fff;
         }
     </style>
 </head>
@@ -158,10 +197,12 @@
 </header>
 
 <!-- Mensagem de boas-vindas -->
-<section class="boas-vindas">
+<section class="boas-vindas" id="boas-vindas">
     <h2>Seja um novo assinante! 🎉</h2>
-    <p>Assine agora e aproveite R$19,99 no primeiro mês para receber nossos palpites exclusivos.</p>
+    <p>Aproveite nossa promoção exclusiva! Assine agora e pague apenas R$19,99 no primeiro mês para receber palpites precisos!</p>
+    <div class="cronometro" id="cronometro">Tempo restante: 12h 03m</div>
     <a href="https://pag.ae/7_oY8oJ66" target="_blank"><button>Adquirir Agora</button></a>
+    <button class="close-btn" onclick="fecharBoasVindas()">Fechar</button>
 </section>
 
 <!-- Planos -->
@@ -169,22 +210,22 @@
     <h2>Nossos Planos</h2>
     <div class="plano">
         <h3>Basic 🎯</h3>
-        <p>2 palpites por R$5,00</p>
+        <p>2 palpites por R$5,00. Ideal para quem está começando e quer palpites rápidos e certeiros.</p>
         <a href="https://pag.ae/7_oXQm7Km" target="_blank"><button>Adquirir Agora</button></a>
     </div>
     <div class="plano">
         <h3>Pro 🔥</h3>
-        <p>5 palpites por R$10,00</p>
+        <p>5 palpites por R$10,00. Para quem quer uma análise mais detalhada e diversas opções de apostas.</p>
         <a href="https://pag.ae/7_oXWkkb6" target="_blank"><button>Adquirir Agora</button></a>
     </div>
     <div class="plano">
         <h3>Prêmio 🏆</h3>
-        <p>8 palpites por R$15,00 + 30% de desconto na mensalidade</p>
+        <p>8 palpites por R$15,00 + 30% de desconto na mensalidade. Para apostadores experientes que buscam mais vantagens.</p>
         <a href="https://pag.ae/7_oXXC-14" target="_blank"><button>Adquirir Agora</button></a>
     </div>
     <div class="plano">
         <h3>Assinatura Especial 💎</h3>
-        <p>Receba 8 bilhetes por dia durante 1 mês por R$50,00</p>
+        <p>Receba 8 bilhetes por dia durante 1 mês por R$50,00. Ideal para quem quer um acompanhamento intensivo e personalizado.</p>
         <a href="https://pag.ae/7_oXZ5Wer" target="_blank"><button>Assinar Agora</button></a>
     </div>
 </section>
@@ -193,6 +234,33 @@
 <footer>
     © 2025 Bad Bet - Todos os direitos reservados.
 </footer>
+
+<script>
+    function fecharBoasVindas() {
+        document.getElementById('boas-vindas').style.display = 'none';
+    }
+
+    // Cronômetro de contagem regressiva
+    let tempoRestante = 12 * 60 * 60 + 3 * 60; // 12h03m em segundos
+    let cronometroElemento = document.getElementById('cronometro');
+
+    function atualizarCronometro() {
+        if (tempoRestante <= 0) {
+            cronometroElemento.innerHTML = "Promoção encerrada!";
+            return;
+        }
+
+        let horas = Math.floor(tempoRestante / 3600);
+        let minutos = Math.floor((tempoRestante % 3600) / 60);
+        let segundos = tempoRestante % 60;
+
+        cronometroElemento.innerHTML = `Tempo restante: ${horas}h ${minutos}m ${segundos}s`;
+
+        tempoRestante--;
+    }
+
+    setInterval(atualizarCronometro, 1000); // Atualizar a cada segundo
+</script>
 
 </body>
 </html>
