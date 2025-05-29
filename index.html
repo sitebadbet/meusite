@@ -1,266 +1,355 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bad Bet - Palpites Precisos</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Exo 2', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Point Punch - Beta</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #1b1b1b, #000);
+      font-family: 'Arial Black', sans-serif;
+      color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
 
-        body {
-            background: linear-gradient(120deg, #121212, #1e1e1e);
-            color: #fff;
-            text-align: center;
-            font-size: 16px;
-        }
+    .tela {
+      display: none;
+      padding: 20px;
+    }
 
-        /* Menu */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.9);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1001;
-        }
+    .ativo {
+      display: block;
+    }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #b300ff;
-            text-shadow: 0 0 10px #b300ff;
-        }
+    .titulo {
+      font-size: 34px;
+      color: #00f0ff;
+      text-shadow: 0 0 10px #00f0ff, 0 0 20px #005566;
+      margin-top: 20px;
+    }
 
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
+    .subtitulo {
+      font-size: 16px;
+      color: #bbb;
+      margin-bottom: 20px;
+    }
 
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px;
-            padding: 10px 15px;
-            transition: 0.3s;
-        }
+    .input {
+      padding: 12px;
+      font-size: 18px;
+      margin: 8px;
+      border-radius: 6px;
+      border: 1px solid #00f0ff55;
+      background-color: #111;
+      color: #fff;
+      width: 80%;
+      max-width: 300px;
+      box-shadow: 0 0 8px #00f0ff22;
+    }
 
-        nav ul li a:hover {
-            color: #b300ff;
-            text-shadow: 0 0 10px #b300ff;
-        }
+    .botao {
+      background: linear-gradient(45deg, #ff0055, #ff9900);
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ff005544;
+      transition: 0.3s;
+    }
 
-        /* Mensagem de boas-vindas */
-        .boas-vindas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 30px;
-            color: #fff;
-            text-align: center;
-            z-index: 9999;
-            border-bottom: 3px solid #b300ff;
-        }
+    .botao:hover {
+      background: linear-gradient(45deg, #00ff88, #00ffaa);
+      transform: scale(1.05);
+      color: #000;
+    }
 
-        .boas-vindas h2 {
-            color: #b300ff;
-            margin-bottom: 10px;
-        }
+    .selecionado {
+      border: 4px solid #ff0;
+      animation: pulse 1s infinite;
+    }
 
-        .boas-vindas p {
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px #ff0; }
+      50% { box-shadow: 0 0 20px #ff0; }
+      100% { box-shadow: 0 0 5px #ff0; }
+    }
 
-        .boas-vindas .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ff0000;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+    .placar {
+      font-size: 48px;
+      margin: 10px;
+      color: #ffe600;
+      text-shadow: 0 0 5px #000;
+    }
 
-        .boas-vindas .close-btn:hover {
-            background: #cc0000;
-        }
+    .container-placar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      margin: 15px 0;
+      flex-wrap: nowrap;
+    }
 
-        .boas-vindas button {
-            background: #b300ff;
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    .box-mc {
+      background: #1c1c1c;
+      padding: 15px;
+      border-radius: 20px;
+      flex: 1;
+      max-width: 300px;
+      box-shadow: 0 0 15px #00f0ff33;
+      transition: 0.3s;
+    }
 
-        .boas-vindas button:hover {
-            background: #9000cc;
-        }
+    .box-mc:hover {
+      transform: scale(1.02);
+    }
 
-        .cronometro {
-            font-size: 20px;
-            margin-top: 20px;
-            color: #ff0000;
-        }
+    .box-mc h2 {
+      margin: 10px 0;
+      color: #00f0ff;
+      text-shadow: 0 0 10px #00f0ff44;
+    }
 
-        /* Planos */
-        .planos {
-            margin-top: 150px;
-            padding: 50px;
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+    .botoes-pontuacao {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0 50px;
+    }
 
-        .plano {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px #b300ff;
-            min-width: 280px;
-            transition: transform 0.3s;
-            text-align: left;
-            flex: 1 1 25%;
-            margin: 10px;
-        }
+    .pontuador {
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      color: white;
+      font-weight: bold;
+      width: 130px;
+      box-shadow: 0 0 10px #0006;
+      transition: 0.3s;
+    }
 
-        .plano:hover {
-            transform: scale(1.05);
-        }
+    .pontuador:hover {
+      transform: scale(1.05);
+      filter: brightness(1.2);
+    }
 
-        .plano h3 {
-            margin-bottom: 10px;
-            color: #b300ff;
-        }
+    .regular { background-color: #2980b9; }
+    .punch { background-color: #9b59b6; }
+    .fatality { background-color: #e67e22; }
+    .punicao { background-color: #e74c3c; }
 
-        .plano p {
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
+    .rodada {
+      font-size: 22px;
+      color: #f1c40f;
+      margin: 15px;
+      text-shadow: 0 0 5px #000;
+    }
 
-        .plano button {
-            background: #b300ff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-            width: 100%;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .plano button:hover {
-            background: #9000cc;
-        }
-
-        /* Rodapé */
-        footer {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px;
-            margin-top: 30px;
-            color: #fff;
-        }
-    </style>
+    canvas {
+      margin-top: 20px;
+      background-color: #111;
+      padding: 10px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #0008;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Menu -->
-<header>
-    <div class="logo">BAD BET</div>
-    <nav>
-        <ul>
-            <li><a href="#">Início</a></li>
-            <li><a href="#">Planos</a></li>
-            <li><a href="#">Contato</a></li>
-            <li><a href="sobre-badbet.html">Sobre Bad Bet</a></li>
-        </ul>
-    </nav>
-</header>
+<!-- Tela de Cadastro -->
+<div id="telaCadastro" class="tela ativo">
+  <h1 class="titulo">Point Punch - Beta</h1>
+  <p class="subtitulo">Ferramenta de jurados personalizada<br> Criado por Wellington Silva (Bad HipHop)</p>
 
-<!-- Mensagem de boas-vindas -->
-<section class="boas-vindas" id="boas-vindas">
-    <h2>Seja um novo assinante! 🎉</h2>
-    <p>Aproveite nossa promoção exclusiva! Assine agora e pague apenas R$19,99 no primeiro mês para receber palpites precisos!</p>
-    <div class="cronometro" id="cronometro">Tempo restante: 12h 03m</div>
-    <a href="https://pag.ae/7_oY8oJ66" target="_blank"><button>Adquirir Agora</button></a>
-    <button class="close-btn" onclick="fecharBoasVindas()">Fechar</button>
-</section>
+  <p>Nome do MC 1:</p>
+  <input id="mc1" class="input" type="text">
 
-<!-- Planos -->
-<section class="planos">
-    <h2>Nossos Planos</h2>
-    <div class="plano">
-        <h3>Basic 🎯</h3>
-        <p>2 palpites por R$5,00. Ideal para quem está começando e quer palpites rápidos e certeiros.</p>
-        <a href="https://pag.ae/7_oXQm7Km" target="_blank"><button>Adquirir Agora</button></a>
-    </div>
-    <div class="plano">
-        <h3>Pro 🔥</h3>
-        <p>5 palpites por R$10,00. Para quem quer uma análise mais detalhada e diversas opções de apostas.</p>
-        <a href="https://pag.ae/7_oXWkkb6" target="_blank"><button>Adquirir Agora</button></a>
-    </div>
-    <div class="plano">
-        <h3>Prêmio 🏆</h3>
-        <p>8 palpites por R$15,00 + 30% de desconto na mensalidade. Para apostadores experientes que buscam mais vantagens.</p>
-        <a href="https://pag.ae/7_oXXC-14" target="_blank"><button>Adquirir Agora</button></a>
-    </div>
-    <div class="plano">
-        <h3>Assinatura Especial 💎</h3>
-        <p>Receba 8 bilhetes por dia durante 1 mês por R$50,00. Ideal para quem quer um acompanhamento intensivo e personalizado.</p>
-        <a href="https://pag.ae/7_oXZ5Wer" target="_blank"><button>Assinar Agora</button></a>
-    </div>
-</section>
+  <p>Nome do MC 2:</p>
+  <input id="mc2" class="input" type="text">
 
-<!-- Rodapé -->
-<footer>
-    © 2025 Bad Bet - Todos os direitos reservados.
-</footer>
+  <p>Nome do Jurado:</p>
+  <input id="jurado" class="input" type="text">
+
+  <br>
+  <button class="botao" onclick="iniciar()">Iniciar</button>
+</div>
+
+<!-- Tela de Batalha -->
+<div id="telaBatalha" class="tela">
+  <h2 class="titulo">Batalha: <span id="nomeMC1"></span> X <span id="nomeMC2"></span></h2>
+
+  <div class="container-placar">
+    <div id="mcBox1" class="box-mc" onclick="selecionar('mc1')">
+      <h2 id="labelMC1"></h2>
+      <div class="placar" id="placarMC1">0</div>
+    </div>
+
+    <div id="mcBox2" class="box-mc" onclick="selecionar('mc2')">
+      <h2 id="labelMC2"></h2>
+      <div class="placar" id="placarMC2">0</div>
+    </div>
+  </div>
+
+  <div class="rodada">Pontuação da rodada: <span id="pontuacaoRodada">0</span></div>
+
+  <div class="botoes-pontuacao">
+    <button class="pontuador regular" onclick="pontuar(1)">Regular +1</button>
+    <button class="pontuador punch" onclick="pontuar(2)">Punch +2</button>
+    <button class="pontuador fatality" onclick="pontuar(3)">Fatality +3</button>
+    <button class="pontuador punicao" onclick="pontuar(-1)">Punição -1</button>
+  </div>
+
+  <div>
+    <button class="botao" onclick="reiniciar()">Reiniciar</button>
+    <button class="botao" onclick="mostrarResultado()">Resultado</button>
+  </div>
+</div>
+
+<!-- Tela de Resultado -->
+<div id="telaResultado" class="tela">
+  <h1 class="titulo">Relatório Final</h1>
+  <canvas id="grafico"></canvas>
+  <h2 id="vencedor"></h2>
+  <button class="botao" onclick="voltarInicio()">Voltar</button>
+</div>
 
 <script>
-    function fecharBoasVindas() {
-        document.getElementById('boas-vindas').style.display = 'none';
+  let nomeMC1 = '';
+  let nomeMC2 = '';
+  let jurado = '';
+  let pontosMC1 = 0;
+  let pontosMC2 = 0;
+  let selecionado = '';
+  let pontuacaoRodada = 0;
+
+  let stats = {
+    mc1: { regular: 0, punch: 0, fatality: 0, punicao: 0 },
+    mc2: { regular: 0, punch: 0, fatality: 0, punicao: 0 }
+  };
+
+  function iniciar() {
+    nomeMC1 = document.getElementById('mc1').value;
+    nomeMC2 = document.getElementById('mc2').value;
+    jurado = document.getElementById('jurado').value;
+    if (nomeMC1 && nomeMC2 && jurado) {
+      document.getElementById('nomeMC1').innerText = nomeMC1;
+      document.getElementById('nomeMC2').innerText = nomeMC2;
+      document.getElementById('labelMC1').innerText = nomeMC1;
+      document.getElementById('labelMC2').innerText = nomeMC2;
+      mudarTela('telaBatalha');
+    } else {
+      alert('Preencha todos os campos!');
     }
+  }
 
-    // Cronômetro de contagem regressiva
-    let tempoRestante = 12 * 60 * 60 + 3 * 60; // 12h03m em segundos
-    let cronometroElemento = document.getElementById('cronometro');
+  function selecionar(mc) {
+    selecionado = mc;
+    pontuacaoRodada = 0;
+    document.getElementById('pontuacaoRodada').innerText = pontuacaoRodada;
+    document.getElementById('mcBox1').classList.remove('selecionado');
+    document.getElementById('mcBox2').classList.remove('selecionado');
+    if (mc === 'mc1') {
+      document.getElementById('mcBox1').classList.add('selecionado');
+    } else {
+      document.getElementById('mcBox2').classList.add('selecionado');
+    }
+  }
 
-    function atualizarCronometro() {
-        if (tempoRestante <= 0) {
-            cronometroElemento.innerHTML = "Promoção encerrada!";
-            return;
+  function pontuar(valor) {
+    if (!selecionado) {
+      alert('Selecione um MC!');
+      return;
+    }
+    pontuacaoRodada += valor;
+    document.getElementById('pontuacaoRodada').innerText = pontuacaoRodada;
+    if (selecionado === 'mc1') {
+      pontosMC1 += valor;
+      if (valor === 1) stats.mc1.regular++;
+      if (valor === 2) stats.mc1.punch++;
+      if (valor === 3) stats.mc1.fatality++;
+      if (valor === -1) stats.mc1.punicao++;
+    } else {
+      pontosMC2 += valor;
+      if (valor === 1) stats.mc2.regular++;
+      if (valor === 2) stats.mc2.punch++;
+      if (valor === 3) stats.mc2.fatality++;
+      if (valor === -1) stats.mc2.punicao++;
+    }
+    atualizarPlacar();
+  }
+
+  function atualizarPlacar() {
+    document.getElementById('placarMC1').innerText = pontosMC1;
+    document.getElementById('placarMC2').innerText = pontosMC2;
+  }
+
+  function mostrarResultado() {
+    mudarTela('telaResultado');
+    const ctx = document.getElementById('grafico').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Regular', 'Punch', 'Fatality', 'Punição'],
+        datasets: [
+          {
+            label: nomeMC1,
+            data: [stats.mc1.regular, stats.mc1.punch, stats.mc1.fatality, stats.mc1.punicao],
+            backgroundColor: 'cyan'
+          },
+          {
+            label: nomeMC2,
+            data: [stats.mc2.regular, stats.mc2.punch, stats.mc2.fatality, stats.mc2.punicao],
+            backgroundColor: 'magenta'
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
         }
+      }
+    });
 
-        let horas = Math.floor(tempoRestante / 3600);
-        let minutos = Math.floor((tempoRestante % 3600) / 60);
-        let segundos = tempoRestante % 60;
+    let vencedor = '';
+    if (pontosMC1 > pontosMC2) vencedor = `Vencedor: ${nomeMC1}`;
+    else if (pontosMC2 > pontosMC1) vencedor = `Vencedor: ${nomeMC2}`;
+    else vencedor = 'Empate!';
+    document.getElementById('vencedor').innerText = vencedor;
+  }
 
-        cronometroElemento.innerHTML = `Tempo restante: ${horas}h ${minutos}m ${segundos}s`;
+  function reiniciar() {
+    pontosMC1 = 0;
+    pontosMC2 = 0;
+    pontuacaoRodada = 0;
+    selecionado = '';
+    stats = {
+      mc1: { regular: 0, punch: 0, fatality: 0, punicao: 0 },
+      mc2: { regular: 0, punch: 0, fatality: 0, punicao: 0 }
+    };
+    document.getElementById('pontuacaoRodada').innerText = pontuacaoRodada;
+    atualizarPlacar();
+    mudarTela('telaCadastro');
+  }
 
-        tempoRestante--;
-    }
+  function voltarInicio() {
+    reiniciar();
+  }
 
-    setInterval(atualizarCronometro, 1000); // Atualizar a cada segundo
+  function mudarTela(tela) {
+    document.getElementById('telaCadastro').classList.remove('ativo');
+    document.getElementById('telaBatalha').classList.remove('ativo');
+    document.getElementById('telaResultado').classList.remove('ativo');
+    document.getElementById(tela).classList.add('ativo');
+  }
 </script>
-
 </body>
 </html>
