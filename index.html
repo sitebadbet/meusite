@@ -203,8 +203,9 @@
 
   <div class="botoes-pontuacao">
     <button class="pontuador regular" onclick="pontuar(1)">Regular +1</button>
-    <button class="pontuador punch" onclick="pontuar(2)">Punch +2</button>
-    <button class="pontuador fatality" onclick="pontuar(3)">Fatality +3</button>
+    <button class="pontuador" style="background-color: #27ae60;" onclick="pontuar(2)">Bom +2</button>
+    <button class="pontuador punch" onclick="pontuar(3)">Punch +3</button>
+    <button class="pontuador fatality" onclick="pontuar(5)">Fatality +5</button>
     <button class="pontuador punicao" onclick="pontuar(-1)">Punição -1</button>
   </div>
 
@@ -232,8 +233,8 @@
   let pontuacaoRodada = 0;
 
   let stats = {
-    mc1: { regular: 0, punch: 0, fatality: 0, punicao: 0 },
-    mc2: { regular: 0, punch: 0, fatality: 0, punicao: 0 }
+    mc1: { regular: 0, bom: 0, punch: 0, fatality: 0, punicao: 0 },
+    mc2: { regular: 0, bom: 0, punch: 0, fatality: 0, punicao: 0 }
   };
 
   function iniciar() {
@@ -271,19 +272,21 @@
     }
     pontuacaoRodada += valor;
     document.getElementById('pontuacaoRodada').innerText = pontuacaoRodada;
+
+    const atual = selecionado === 'mc1' ? stats.mc1 : stats.mc2;
+
+    if (valor === 1) atual.regular++;
+    if (valor === 2) atual.bom++;
+    if (valor === 3) atual.punch++;
+    if (valor === 5) atual.fatality++;
+    if (valor === -1) atual.punicao++;
+
     if (selecionado === 'mc1') {
       pontosMC1 += valor;
-      if (valor === 1) stats.mc1.regular++;
-      if (valor === 2) stats.mc1.punch++;
-      if (valor === 3) stats.mc1.fatality++;
-      if (valor === -1) stats.mc1.punicao++;
     } else {
       pontosMC2 += valor;
-      if (valor === 1) stats.mc2.regular++;
-      if (valor === 2) stats.mc2.punch++;
-      if (valor === 3) stats.mc2.fatality++;
-      if (valor === -1) stats.mc2.punicao++;
     }
+
     atualizarPlacar();
   }
 
@@ -298,16 +301,16 @@
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Regular', 'Punch', 'Fatality', 'Punição'],
+        labels: ['Regular', 'Bom', 'Punch', 'Fatality', 'Punição'],
         datasets: [
           {
             label: nomeMC1,
-            data: [stats.mc1.regular, stats.mc1.punch, stats.mc1.fatality, stats.mc1.punicao],
+            data: [stats.mc1.regular, stats.mc1.bom, stats.mc1.punch, stats.mc1.fatality, stats.mc1.punicao],
             backgroundColor: 'cyan'
           },
           {
             label: nomeMC2,
-            data: [stats.mc2.regular, stats.mc2.punch, stats.mc2.fatality, stats.mc2.punicao],
+            data: [stats.mc2.regular, stats.mc2.bom, stats.mc2.punch, stats.mc2.fatality, stats.mc2.punicao],
             backgroundColor: 'magenta'
           }
         ]
@@ -332,8 +335,8 @@
     pontuacaoRodada = 0;
     selecionado = '';
     stats = {
-      mc1: { regular: 0, punch: 0, fatality: 0, punicao: 0 },
-      mc2: { regular: 0, punch: 0, fatality: 0, punicao: 0 }
+      mc1: { regular: 0, bom: 0, punch: 0, fatality: 0, punicao: 0 },
+      mc2: { regular: 0, bom: 0, punch: 0, fatality: 0, punicao: 0 }
     };
     document.getElementById('pontuacaoRodada').innerText = pontuacaoRodada;
     atualizarPlacar();
